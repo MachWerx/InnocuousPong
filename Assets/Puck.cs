@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 public class Puck : MonoBehaviour {
-  [SerializeField] Paddle[] m_Paddles = null;
+  [SerializeField] GameState m_GameState = null;
 
   private Vector3 m_Velocity;
 
@@ -15,7 +15,7 @@ public class Puck : MonoBehaviour {
     Vector3 pos = transform.localPosition;
     pos += m_Velocity * Time.deltaTime;
 
-    foreach (var paddle in m_Paddles) {
+    foreach (var paddle in m_GameState.GetPaddles()) {
       paddle.DoIntersection(ref pos, transform.localScale, ref m_Velocity);
     }
 

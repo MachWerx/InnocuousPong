@@ -10,6 +10,7 @@ public class Paddle : MonoBehaviour {
     Forward
   }
 
+  [SerializeField] GameState m_GameState = null;
   [SerializeField] Type m_Type;
   [SerializeField] bool m_IsStatic = false;
 
