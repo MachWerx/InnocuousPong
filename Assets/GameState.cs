@@ -72,6 +72,7 @@ public class GameState : MonoBehaviour {
   private float m_Difficulty;
 
   void Awake() {
+    Cursor.visible = false;
     m_Paddles = new Paddle[] {
       m_PaddleLeft,
       m_PaddleRight,
