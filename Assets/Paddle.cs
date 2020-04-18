@@ -104,8 +104,17 @@ public class Paddle : MonoBehaviour {
     }
   }
 
-  private float kMouseSpeed = 0.5f;
-  private float kBorder = 4.75f;
+  private const float kMouseSpeed = 0.5f;
+  private const float kBorder = 4.75f;
+  private static readonly Vector3[] kNormals = new Vector3[] {
+    Vector3.right,
+    Vector3.left,
+    Vector3.up,
+    Vector3.down,
+    Vector3.forward,
+    Vector3.back
+  };
+
   private Vector3 m_Velocity;
   private Vector3 m_InitialPosition;
 
@@ -145,74 +154,22 @@ public class Paddle : MonoBehaviour {
     Bounds bounds = new Bounds(pos, size);
 
     if (bounds.Intersects(puckBounds)) {
-      // find intersection time
-      float minT = -Time.deltaTime;
-      float maxT = 0;
-      float t = 0.5f * (minT + maxT);
-      for (int i = 0; i < 10; i++) {
-        puckBounds = new Bounds(puckPos + t * puckVel, puckSize);
-        bounds = new Bounds(pos + t * m_Velocity, size);
-        if (bounds.Intersects(puckBounds)) {
-          maxT = t;
-        } else {
-          minT = t;
+      Vector3 normal = kNormals[(int)m_Type];
+      Vector3 boundaryPoint = pos + 0.5f * normal;
+      float distance = Vector3.Dot(puckPos - boundaryPoint, normal);
+      if (distance < 0) {
+        float puckVelNormalComponent = Vector3.Dot(puckVel, normal);
+        float t = distance / puckVelNormalComponent;
+        puckPos -= puckVel * t;
+        pos -= m_Velocity * t;
+        if (!m_IsStatic) {
+          // tweak normals for paddles
+          const float kFudgeRadius = 5.0f;  // the radius of a sphere to fudge the normal with
+          normal = (puckPos - (pos - kFudgeRadius * normal)).normalized;
         }
-        t = 0.5f * (minT + maxT);
+        puckVel -= 2 * Vector3.Dot(puckVel, normal) * normal;
+        puckPos += puckVel * t;
       }
-
-      // rewind to intersection time
-      pos += t * m_Velocity;
-      bounds = new Bounds(pos, size);
-      puckPos += t * puckVel;
-
-      // figure out normal at intersection point
-      Vector3 normal = Vector3.zero;
-      if (puckPos.x < bounds.min.x) {
-        normal += Vector3.left;
-      } else if (puckPos.x > bounds.max.x) {
-        normal += Vector3.right;
-      }
-      if (puckPos.y < bounds.min.y) {
-        normal += Vector3.down;
-      } else if (puckPos.y > bounds.max.y) {
-        normal += Vector3.up;
-      }
-      if (puckPos.z < bounds.min.z) {
-        normal += Vector3.back;
-      } else if (puckPos.z > bounds.max.z) {
-        normal += Vector3.forward;
-      }
-      if (!m_IsStatic) {
-        // slight tweak factor to "bend" normal for paddles
-        normal += puckPos - (pos - normal) * 2.0f;
-      }
-      normal.Normalize();
-
-      // calculate new puck velocity
-      puckVel -= m_Velocity;
-      puckVel -= 2 * Vector3.Dot(puckVel, normal) * normal;
-      puckVel += m_Velocity;
-
-      // fast foward to current time
-      pos -= t * m_Velocity;
-      bounds = new Bounds(pos, size);
-      puckPos -= t * puckVel;
-      puckBounds = new Bounds(puckPos, puckSize);
-
-      // nudge puck out of the way if it's still intersecting
-      int counter = 0;
-      while (bounds.Intersects(puckBounds)) {
-        counter++;
-        Debug.Log($"nudge! {counter}");
-        if (counter > 100) {
-          break;
-        }
-        float epsilon = .01f;
-        puckPos += epsilon * puckVel;
-        puckBounds = new Bounds(puckPos, puckSize);
-      }
-
-      // add to the score
       m_GameState.Score++;
     }
   }
