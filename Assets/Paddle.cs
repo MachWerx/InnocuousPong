@@ -1,7 +1,11 @@
 ﻿using UnityEngine;
 
 public class Paddle : MonoBehaviour {
-  enum Type {
+  [SerializeField] GameState m_GameState = null;
+  [SerializeField] Type m_Type;
+  [SerializeField] bool m_IsStatic = false;
+
+  public enum Type {
     Left,
     Right,
     Down,
@@ -9,10 +13,6 @@ public class Paddle : MonoBehaviour {
     Back,
     Forward
   }
-
-  [SerializeField] GameState m_GameState = null;
-  [SerializeField] Type m_Type;
-  [SerializeField] bool m_IsStatic = false;
 
   private float kMouseSpeed = 0.5f;
   private float kBorder = 4.75f;
