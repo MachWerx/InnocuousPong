@@ -1,15 +1,13 @@
 ﻿using UnityEngine;
 
 public class Puck : MonoBehaviour {
-  [SerializeField] Paddle m_PaddleLeft;
+  [SerializeField] Paddle m_PaddleLeft = null;
 
   private float kBorder = 4.5f;
-  private float m_Size;
   private Vector3 m_Velocity;
 
   // Start is called before the first frame update
   void Start() {
-    m_Size = transform.localScale.x;
     float angle = (Random.value - 0.5f) * 0.5f * Mathf.PI + Mathf.PI;
     m_Velocity = 3f * new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0);
   }
@@ -20,7 +18,7 @@ public class Puck : MonoBehaviour {
     pos += m_Velocity * Time.deltaTime;
 
     if (pos.x < -kBorder) {
-      Vector3 bounce = m_PaddleLeft.CheckIntersection(pos, m_Size);
+      Vector3 bounce = m_PaddleLeft.CheckIntersection(pos, transform.localScale, m_Velocity);
       if (bounce != Vector3.zero) {
         // t is the amount of time you have to go back to get to the intersection point.
         float t = (-kBorder - pos.x) / m_Velocity.x;
