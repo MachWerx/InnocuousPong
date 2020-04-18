@@ -21,6 +21,9 @@ public class Puck : MonoBehaviour {
   // Do physics in late update so that the puck comes after the paddle.
   void LateUpdate() {
     Vector3 pos = transform.localPosition;
+    float speed = m_Velocity.magnitude;
+    speed = 0.1f * (m_GameState.GetPuckTargetSpeed() - speed) + speed;
+    m_Velocity = speed * m_Velocity.normalized;
     pos += m_Velocity * Time.deltaTime;
 
     foreach (var paddle in m_GameState.GetPaddles()) {

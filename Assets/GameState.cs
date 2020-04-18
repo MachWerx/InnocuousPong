@@ -124,6 +124,10 @@ public class GameState : MonoBehaviour {
     return Direction.None;
   }
 
+  public float GetPuckTargetSpeed() {
+    return 2 + Level / 2.0f;
+  }
+
   private void ResetGame() {
     Score = 0;
     Level = 1;
