@@ -11,7 +11,7 @@ public class Puck : MonoBehaviour {
   void Start() {
     m_Size = transform.localScale.x;
     float angle = (Random.value - 0.5f) * 0.5f * Mathf.PI + Mathf.PI;
-    m_Velocity = 2 * new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0);
+    m_Velocity = 3f * new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0);
   }
 
   // Update is called once per frame
@@ -20,9 +20,13 @@ public class Puck : MonoBehaviour {
     pos += m_Velocity * Time.deltaTime;
 
     if (pos.x < -kBorder) {
-      if (m_PaddleLeft.CheckIntersection(pos, m_Size) == Vector3.one) {
-        pos.x = -2 * kBorder - pos.x;
-        m_Velocity.x *= -1;
+      Vector3 bounce = m_PaddleLeft.CheckIntersection(pos, m_Size);
+      if (bounce != Vector3.zero) {
+        // t is the amount of time you have to go back to get to the intersection point.
+        float t = (-kBorder - pos.x) / m_Velocity.x;
+        pos += m_Velocity * t;
+        m_Velocity = m_Velocity.magnitude * bounce;
+        pos += m_Velocity * (Time.deltaTime - t);
       }
     } else if (pos.x > kBorder) {
       pos.x = 2 * kBorder - pos.x;

@@ -16,7 +16,6 @@ public class Paddle : MonoBehaviour {
   void Update() {
     Vector2 mousePosition = Input.mousePosition;
     Vector3 pos = transform.localPosition;
-    Debug.Log($"mouse y: {pos.y}");
     pos.y += kMouseSpeed * (mousePosition.y - m_MousePositionPrev.y);
 
     float boundary = kBorder - paddleSize / 2;
@@ -35,13 +34,13 @@ public class Paddle : MonoBehaviour {
   public Vector3 CheckIntersection(Vector3 puckPos, float puckSize) {
     Vector3 pos = transform.localPosition;
     Vector3 size = transform.localScale;
-    if (puckPos.x - puckSize < pos.x + size.x &&
-        puckPos.x + puckSize > pos.x - size.x &&
-        puckPos.y - puckSize < pos.y + size.y &&
-        puckPos.y + puckSize > pos.y - size.y &&
-        puckPos.z - puckSize < pos.z + size.z &&
-        puckPos.z + puckSize > pos.z - size.z) {
-      return Vector3.one;
+    if (puckPos.x - puckSize / 2 < pos.x + size.x / 2 &&
+        puckPos.x + puckSize / 2 > pos.x - size.x / 2 &&
+        puckPos.y - puckSize / 2 < pos.y + size.y / 2 &&
+        puckPos.y + puckSize / 2 > pos.y - size.y / 2 &&
+        puckPos.z - puckSize / 2 < pos.z + size.z / 2 &&
+        puckPos.z + puckSize / 2 > pos.z - size.z / 2) {
+      return (puckPos - pos).normalized;
     }
 
     return Vector3.zero;
