@@ -14,14 +14,12 @@ public class Paddle : MonoBehaviour {
   [SerializeField] Type m_Type;
   [SerializeField] bool m_IsStatic = false;
 
-  private float kMouseSpeed = 0.02f;
+  private float kMouseSpeed = 0.5f;
   private float kBorder = 4.75f;
-  private Vector2 m_MousePositionPrev;
   private Vector3 m_Velocity;
   private float paddleSize;
 
   void Start() {
-    m_MousePositionPrev = Input.mousePosition;
     paddleSize = transform.localScale.y;
   }
 
@@ -30,7 +28,7 @@ public class Paddle : MonoBehaviour {
     Vector3 pos = transform.localPosition;
 
     if (!m_IsStatic) {
-      pos.y += kMouseSpeed * (mousePosition.y - m_MousePositionPrev.y);
+      pos.y += kMouseSpeed * (Input.GetAxis("Mouse Y"));
       float boundary = kBorder - paddleSize / 2;
 
       if (pos.y < -boundary) {
@@ -42,9 +40,6 @@ public class Paddle : MonoBehaviour {
       m_Velocity = (pos - transform.localPosition) / Time.deltaTime;
       transform.localPosition = pos;
     }
-
-    m_MousePositionPrev = mousePosition;
-
   }
 
   public void DoIntersection(ref Vector3 puckPos, Vector3 puckSize, ref Vector3 puckVel) {
@@ -101,6 +96,9 @@ public class Paddle : MonoBehaviour {
       // fast foward to current time
       pos -= t * m_Velocity;
       puckPos -= t * puckVel;
+
+      // add to the score
+      m_GameState.Score++;
     }
   }
 }
