@@ -107,11 +107,9 @@ public class Paddle : MonoBehaviour {
   private float kMouseSpeed = 0.5f;
   private float kBorder = 4.75f;
   private Vector3 m_Velocity;
-  private float paddleSize;
   private Vector3 m_InitialPosition;
 
   void Awake() {
-    paddleSize = transform.localScale.y;
     m_InitialPosition = transform.localPosition;
   }
 
@@ -121,20 +119,19 @@ public class Paddle : MonoBehaviour {
 
     if (!m_IsStatic) {
       Vector3 oldPos = transform.localPosition;
-      float boundary = kBorder - paddleSize / 2;
 
       Vertical += kMouseSpeed * (Input.GetAxis("Mouse Y"));
-      if (Vertical < -boundary) {
-        Vertical = -boundary;
-      } else if (Vertical > boundary) {
-        Vertical = boundary;
+      if (Vertical < -kBorder) {
+        Vertical = -kBorder;
+      } else if (Vertical > kBorder) {
+        Vertical = kBorder;
       }
 
       Horizontal += kMouseSpeed * (Input.GetAxis("Mouse X"));
-      if (Horizontal < -boundary) {
-        Horizontal = -boundary;
-      } else if (Horizontal > boundary) {
-        Horizontal = boundary;
+      if (Horizontal < -kBorder) {
+        Horizontal = -kBorder;
+      } else if (Horizontal > kBorder) {
+        Horizontal = kBorder;
       }
 
       m_Velocity = (transform.localPosition - oldPos) / Time.deltaTime;
