@@ -121,13 +121,20 @@ public class Paddle : MonoBehaviour {
 
     if (!m_IsStatic) {
       Vector3 oldPos = transform.localPosition;
-      Vertical += kMouseSpeed * (Input.GetAxis("Mouse Y"));
       float boundary = kBorder - paddleSize / 2;
 
+      Vertical += kMouseSpeed * (Input.GetAxis("Mouse Y"));
       if (Vertical < -boundary) {
         Vertical = -boundary;
       } else if (Vertical > boundary) {
         Vertical = boundary;
+      }
+
+      Horizontal += kMouseSpeed * (Input.GetAxis("Mouse X"));
+      if (Horizontal < -boundary) {
+        Horizontal = -boundary;
+      } else if (Horizontal > boundary) {
+        Horizontal = boundary;
       }
 
       m_Velocity = (transform.localPosition - oldPos) / Time.deltaTime;
