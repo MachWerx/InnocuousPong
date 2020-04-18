@@ -113,7 +113,6 @@ public class Paddle : MonoBehaviour {
   void Awake() {
     paddleSize = transform.localScale.y;
     m_InitialPosition = transform.localPosition;
-    Debug.Log($"set init: {m_InitialPosition} {name}");
   }
 
   void Update() {
@@ -123,7 +122,6 @@ public class Paddle : MonoBehaviour {
     if (!m_IsStatic) {
       Vector3 oldPos = transform.localPosition;
       Vertical += kMouseSpeed * (Input.GetAxis("Mouse Y"));
-      Debug.Log($"vert: {Vertical}");
       float boundary = kBorder - paddleSize / 2;
 
       if (Vertical < -boundary) {
@@ -200,7 +198,6 @@ public class Paddle : MonoBehaviour {
     m_IsStatic = value;
     if (m_IsStatic) {
       transform.localPosition = m_InitialPosition;
-      Debug.Log($"read init: {m_InitialPosition} {name}");
     }
     Vector3 size = 0.5f * Vector3.one;
     switch (m_Type) {
