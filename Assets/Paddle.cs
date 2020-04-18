@@ -1,6 +1,18 @@
 ﻿using UnityEngine;
 
 public class Paddle : MonoBehaviour {
+  enum Type {
+    Left,
+    Right,
+    Down,
+    Up,
+    Back,
+    Forward
+  }
+
+  [SerializeField] Type m_Type;
+  [SerializeField] bool m_IsStatic = false;
+
   private float kMouseSpeed = 0.02f;
   private float kBorder = 4.75f;
   private Vector2 m_MousePositionPrev;
@@ -15,18 +27,21 @@ public class Paddle : MonoBehaviour {
   void Update() {
     Vector2 mousePosition = Input.mousePosition;
     Vector3 pos = transform.localPosition;
-    pos.y += kMouseSpeed * (mousePosition.y - m_MousePositionPrev.y);
 
-    float boundary = kBorder - paddleSize / 2;
+    if (!m_IsStatic) {
+      pos.y += kMouseSpeed * (mousePosition.y - m_MousePositionPrev.y);
+      float boundary = kBorder - paddleSize / 2;
 
-    if (pos.y < -boundary) {
-      pos.y = -boundary;
-    } else if (pos.y > boundary) {
-      pos.y = boundary;
+      if (pos.y < -boundary) {
+        pos.y = -boundary;
+      } else if (pos.y > boundary) {
+        pos.y = boundary;
+      }
+
+      m_Velocity = (pos - transform.localPosition) / Time.deltaTime;
+      transform.localPosition = pos;
     }
 
-    m_Velocity = (pos - transform.localPosition) / Time.deltaTime;
-    transform.localPosition = pos;
     m_MousePositionPrev = mousePosition;
 
   }
