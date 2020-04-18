@@ -178,6 +178,10 @@ public class Paddle : MonoBehaviour {
       } else if (puckPos.z > bounds.max.z) {
         normal += Vector3.forward;
       }
+      if (!m_IsStatic) {
+        // slight tweak factor to "bend" normal for paddles
+        normal += puckPos - (pos - normal) * 2.0f;
+      }
       normal.Normalize();
 
       // calculate new puck velocity
@@ -187,7 +191,22 @@ public class Paddle : MonoBehaviour {
 
       // fast foward to current time
       pos -= t * m_Velocity;
+      bounds = new Bounds(pos, size);
       puckPos -= t * puckVel;
+      puckBounds = new Bounds(puckPos, puckSize);
+
+      // nudge puck out of the way if it's still intersecting
+      int counter = 0;
+      while (bounds.Intersects(puckBounds)) {
+        counter++;
+        Debug.Log($"nudge! {counter}");
+        if (counter > 100) {
+          break;
+        }
+        float epsilon = .01f;
+        puckPos += epsilon * puckVel;
+        puckBounds = new Bounds(puckPos, puckSize);
+      }
 
       // add to the score
       m_GameState.Score++;

@@ -753,7 +753,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_GameState: {fileID: 1815406510}
-  m_Type: 1
+  m_Type: 2
   m_IsStatic: 1
 --- !u!65 &696481462
 BoxCollider:
@@ -1147,7 +1147,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_GameState: {fileID: 1815406510}
-  m_Type: 1
+  m_Type: 3
   m_IsStatic: 1
 --- !u!65 &973496122
 BoxCollider:
