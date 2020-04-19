@@ -11,6 +11,7 @@ public class GameState : MonoBehaviour {
   [SerializeField] private Paddle m_PaddleFront = null;
   [SerializeField] private GridGuide m_GridGuide = null;
   [SerializeField] private Light m_Light = null;
+  [SerializeField] private AudioSource m_AudioHit = null;
 
   [SerializeField] private TMPro.TextMeshPro m_ScoreText = null;
   [SerializeField] private TMPro.TextMeshPro m_LevelText = null;
@@ -79,6 +80,8 @@ public class GameState : MonoBehaviour {
       m_ScoreText.text = m_Score.ToString();
 
       Level = (m_Score / kPointsBetweenLevels);
+
+      m_AudioHit.Play();
     }
   }
 
