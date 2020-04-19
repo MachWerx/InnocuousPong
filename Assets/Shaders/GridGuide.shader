@@ -58,15 +58,15 @@
                 // sample the texture
                 fixed4 col = tex2D(_MainTex, i.uv);
 
-                col *= fixed4(.2, .4, 1, 0);
-                float gridX = smoothstep(0.9, 1.0, 2 * abs(abs((10 * i.posObj.x) % 1) - 0.5));
-                float gridY = smoothstep(0.9, 1.0, 2 * abs(abs((10 * i.posObj.y) % 1) - 0.5));
-                float gridZ = smoothstep(0.9, 1.0, 2 * abs(abs((10 * i.posObj.z) % 1) - 0.5));
+                col *= fixed4(.02, .04, 1, 0);
+                float gridX = smoothstep(0.7, 1.0, 2 * abs(abs((10 * i.posObj.x) % 1) - 0.5));
+                float gridY = smoothstep(0.7, 1.0, 2 * abs(abs((10 * i.posObj.y) % 1) - 0.5));
+                float gridZ = smoothstep(0.7, 1.0, 2 * abs(abs((10 * i.posObj.z) % 1) - 0.5));
                 float grid
                     = gridX * (1 - abs(i.normal.x))
                     + gridY * (1 - abs(i.normal.y))
                     + gridZ * (1 - abs(i.normal.z));
-                col *= 2*grid;
+                col *= 20*grid;
 
                 //col.rgb = 0.5*i.normal + float3(0.5, 0.5, 0.5);
 
