@@ -30,36 +30,36 @@ public class GameState : MonoBehaviour {
   // Each enty specifies whether the given paddle (Left, Right, Down, Up, Back, Fore) is static for
   // that level.
   private bool[][] kPaddleStaticMap = new bool[][] {
-    new bool[] {false, true , true , true , true , true },  // level 1, just left
-    new bool[] {false, false, true , true , true , true },  // level 2, left and right, linked
-    new bool[] {false, false, true , true , true , true },  // level 3, left and right, opposite
-    new bool[] {false, false, false, false, true , true },  // level 4, left/right and down/up, linked to y and x
-    new bool[] {false, false, false, false, true , true },  // level 5, left/right and down/up, just y
-    new bool[] {false, false, false, false, false, false},  // level 6, THREE DIMENSIONS!
+    new bool[] {false, true , true , true , true , true },  // level 0, just left
+    new bool[] {false, false, true , true , true , true },  // level 1, left and right, linked
+    new bool[] {false, false, true , true , true , true },  // level 2, left and right, opposite
+    new bool[] {false, false, false, false, true , true },  // level 3, left/right and down/up, linked to y and x
+    new bool[] {false, false, false, false, true , true },  // level 4, left/right and down/up, just y
+    new bool[] {false, false, false, false, false, false},  // level 5, THREE DIMENSIONS!
   };
 
   // Each enty specifies the horizontal axis for the given paddle (Left, Right, Down, Up, Back,
   // Fore).
   private Direction[][] kHorizontalAxisMap = new Direction[][] {
+    new Direction[] {Direction.None, Direction.None, Direction.None, Direction.None, Direction.None, Direction.None},  // level 0
     new Direction[] {Direction.None, Direction.None, Direction.None, Direction.None, Direction.None, Direction.None},  // level 1
     new Direction[] {Direction.None, Direction.None, Direction.None, Direction.None, Direction.None, Direction.None},  // level 2
-    new Direction[] {Direction.None, Direction.None, Direction.None, Direction.None, Direction.None, Direction.None},  // level 3
-    new Direction[] {Direction.None, Direction.None, Direction.Right, Direction.Right, Direction.None, Direction.None},  // level 4
-    new Direction[] {Direction.None, Direction.None, Direction.None, Direction.None, Direction.None, Direction.None},  // level 5
-    //new Direction[] {Direction.Back, Direction.Front, Direction.Left, Direction.Right, Direction.Down, Direction.Up},  // level 6, too hard?
-    new Direction[] {Direction.Back, Direction.Back, Direction.Right, Direction.Right, Direction.Right, Direction.Right},  // level 6
+    new Direction[] {Direction.None, Direction.None, Direction.Right, Direction.Right, Direction.None, Direction.None},  // level 3
+    new Direction[] {Direction.None, Direction.None, Direction.None, Direction.None, Direction.None, Direction.None},  // level 4
+    //new Direction[] {Direction.Back, Direction.Front, Direction.Left, Direction.Right, Direction.Down, Direction.Up},  // level 5, too hard?
+    new Direction[] {Direction.Back, Direction.Back, Direction.Right, Direction.Right, Direction.Right, Direction.Right},  // level 5
   };
 
   // Each enty specifies the vertical axis for the given paddle (Left, Right, Down, Up, Back,
   // Fore).
   private Direction[][] kVerticalAxisMap = new Direction[][] {
-    new Direction[] {Direction.Up, Direction.None, Direction.None, Direction.None, Direction.None, Direction.None},  // level 1
-    new Direction[] {Direction.Up, Direction.Up, Direction.None, Direction.None, Direction.None, Direction.None},  // level 2
-    new Direction[] {Direction.Up, Direction.Down, Direction.None, Direction.None, Direction.None, Direction.None},  // level 3
-    new Direction[] {Direction.Up, Direction.Up, Direction.None, Direction.None, Direction.None, Direction.None},  // level 4
-    new Direction[] {Direction.Up, Direction.Down, Direction.Left, Direction.Right, Direction.None, Direction.None},  // level 5
-    //new Direction[] {Direction.Up, Direction.Down, Direction.Back, Direction.Front, Direction.Left, Direction.Right},  // level 6, too hard?
-    new Direction[] {Direction.Up, Direction.Up, Direction.Front, Direction.Front, Direction.Up, Direction.Up},  // level 6, too hard?
+    new Direction[] {Direction.Up, Direction.None, Direction.None, Direction.None, Direction.None, Direction.None},  // level 0
+    new Direction[] {Direction.Up, Direction.Up, Direction.None, Direction.None, Direction.None, Direction.None},  // level 1
+    new Direction[] {Direction.Up, Direction.Down, Direction.None, Direction.None, Direction.None, Direction.None},  // level 2
+    new Direction[] {Direction.Up, Direction.Up, Direction.None, Direction.None, Direction.None, Direction.None},  // level 3
+    new Direction[] {Direction.Up, Direction.Down, Direction.Left, Direction.Right, Direction.None, Direction.None},  // level 4
+    //new Direction[] {Direction.Up, Direction.Down, Direction.Back, Direction.Front, Direction.Left, Direction.Right},  // level 5, too hard?
+    new Direction[] {Direction.Up, Direction.Up, Direction.Front, Direction.Front, Direction.Up, Direction.Up},  // level 5, too hard?
   };
 
   public int Score {
@@ -68,9 +68,9 @@ public class GameState : MonoBehaviour {
       m_Score = value;
       m_ScoreText.text = m_Score.ToString();
 
-      Level = (m_Score / kPointsBetweenLevels) + 1;
-      if (Level > kMaxLevel) {
-        Level = kMaxLevel;
+      Level = (m_Score / kPointsBetweenLevels);
+      if (Level >= kMaxLevel) {
+        Level = kMaxLevel - 1;
       }
     }
   }
@@ -86,8 +86,8 @@ public class GameState : MonoBehaviour {
         AdjustPaddles();
         AdjustCamera();
 
-        // show guides after level 5
-        if (m_Level > 5) {
+        // show guides after level 4
+        if (m_Level > 4) {
           m_GridGuide.gameObject.SetActive(true);
           m_Puck.SetGuides(true);
         }
@@ -134,19 +134,11 @@ public class GameState : MonoBehaviour {
   }
 
   public Direction GetHorizontalAxis(Paddle.Type type) {
-    if (Level > 0) {
-      return kHorizontalAxisMap[Level - 1][(int)type];
-    }
-
-    return Direction.None;
+    return kHorizontalAxisMap[Level][(int)type];
   }
 
   public Direction GetVerticalAxis(Paddle.Type type) {
-    if (Level > 0) {
-      return kVerticalAxisMap[Level - 1][(int)type];
-    }
-
-    return Direction.None;
+    return kVerticalAxisMap[Level][(int)type];
   }
 
   public float GetPuckTargetSpeed() {
@@ -160,25 +152,23 @@ public class GameState : MonoBehaviour {
     //switch (Level) {
 
     //}
-    return 4 + Score - ((Level - 1) * kPointsBetweenLevels);
+    return 4 + Score - (Level * kPointsBetweenLevels);
   }
 
   private void AdjustPaddles() {
     float horizontalValue = m_PaddleLeft.transform.localPosition.y;
     float verticalValue = m_PaddleLeft.transform.localPosition.y;
-    if (Level > 0) {
-      bool[] staticMap = kPaddleStaticMap[Level - 1];
-      m_PaddleLeft.SetStatic(staticMap[0]);
-      m_PaddleRight.SetStatic(staticMap[1]);
-      m_PaddleDown.SetStatic(staticMap[2]);
-      m_PaddleUp.SetStatic(staticMap[3]);
-      m_PaddleBack.SetStatic(staticMap[4]);
-      m_PaddleFront.SetStatic(staticMap[5]);
+    bool[] staticMap = kPaddleStaticMap[Level];
+    m_PaddleLeft.SetStatic(staticMap[0]);
+    m_PaddleRight.SetStatic(staticMap[1]);
+    m_PaddleDown.SetStatic(staticMap[2]);
+    m_PaddleUp.SetStatic(staticMap[3]);
+    m_PaddleBack.SetStatic(staticMap[4]);
+    m_PaddleFront.SetStatic(staticMap[5]);
 
-      if (Level < 6) {
-        m_PaddleBack.transform.localScale = Vector3.zero;
-        m_PaddleFront.transform.localScale = Vector3.zero;
-      }
+    if (Level < 5) {
+      m_PaddleBack.transform.localScale = Vector3.zero;
+      m_PaddleFront.transform.localScale = Vector3.zero;
     }
 
     foreach (var paddle in GetPaddles()) {
@@ -188,17 +178,16 @@ public class GameState : MonoBehaviour {
   }
 
   private void AdjustCamera() {
-    if (Level < 6) {
+    if (Level < 5) {
       m_CameraControl.TransitionTo(Quaternion.Euler(0, 0, 0));
     } else {
       m_CameraControl.TransitionTo(Quaternion.Euler(30, 30, 0));
     }
   }
   private void ResetGame() {
-    Level = 0;
     //Score = 9;
     Score = 0;
-    m_LevelText.alpha = 1;
+    //m_LevelText.alpha = 1;
     m_Difficulty = 0.0f;
 
     m_Puck.Reset();
@@ -206,6 +195,8 @@ public class GameState : MonoBehaviour {
     foreach (var paddle in GetPaddles()) {
       paddle.ResetPosition();
     }
+    AdjustPaddles();
+    AdjustCamera();
     m_GridGuide.gameObject.SetActive(false);
   }
 }
