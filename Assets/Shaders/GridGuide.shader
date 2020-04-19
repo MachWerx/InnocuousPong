@@ -6,7 +6,7 @@
     }
     SubShader
     {
-        Tags { "RenderType" = "Transparent"  "Queue"="Transparent"}
+        Tags { "RenderType" = "Transparent"  "Queue"="Transparent"  "DisableBatching" = "True"}
         LOD 100
             ZWrite Off
             Cull Off
@@ -15,6 +15,7 @@
         {
             CGPROGRAM
 
+            fixed4 _PaddlePosition;
 
             #pragma vertex vert
             #pragma fragment frag
@@ -41,12 +42,14 @@
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
+            matrix _QuadAdjust;
 
             v2f vert (appdata v)
             {
                 v2f o;
+                v.vertex = mul(_QuadAdjust, v.vertex);
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.normal = v.normal;
+                o.normal = mul(_QuadAdjust, v.normal);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 o.posObj = v.vertex;
                 UNITY_TRANSFER_FOG(o,o.vertex);
@@ -58,15 +61,32 @@
                 // sample the texture
                 fixed4 col = tex2D(_MainTex, i.uv);
 
-                col *= fixed4(.02, .04, 1, 0);
                 float gridX = smoothstep(0.7, 1.0, 2 * abs(abs((10 * i.posObj.x) % 1) - 0.5));
                 float gridY = smoothstep(0.7, 1.0, 2 * abs(abs((10 * i.posObj.y) % 1) - 0.5));
                 float gridZ = smoothstep(0.7, 1.0, 2 * abs(abs((10 * i.posObj.z) % 1) - 0.5));
+
                 float grid
-                    = gridX * (1 - abs(i.normal.x))
-                    + gridY * (1 - abs(i.normal.y))
-                    + gridZ * (1 - abs(i.normal.z));
-                col *= 20*grid;
+                    = max(max(gridX * (1 - abs(i.normal.x)), 
+                    gridY * (1 - abs(i.normal.y))),
+                    gridZ * (1 - abs(i.normal.z)));
+
+                float hightlightX = smoothstep(0, 0.9, 1 - 5 * max(abs(i.posObj.y - _PaddlePosition.y), abs(i.posObj.z - _PaddlePosition.z)));
+                float hightlightY = smoothstep(0, 0.9, 1 - 5 * max(abs(i.posObj.x - _PaddlePosition.x), abs(i.posObj.z - _PaddlePosition.z)));
+                float hightlightZ = smoothstep(0, 0.9, 1 - 5 * max(abs(i.posObj.x - _PaddlePosition.x), abs(i.posObj.y - _PaddlePosition.y)));
+                float highlight
+                    = abs(i.normal.x) * hightlightX
+                    + abs(i.normal.y) * hightlightY
+                    + abs(i.normal.z) * hightlightZ;
+
+                float grid8 = grid * grid;
+                grid8 = grid8 * grid8;
+                grid8 = grid8 * grid8;
+                grid8 = grid8 * grid8;
+                grid8 = grid8 * grid8;
+                col = float4(.2 * grid8 * grid8, .5 * grid8, grid, 0);
+
+                col = (.9 * highlight + .01)* col;
+                //col *= 20*grid;
 
                 //col.rgb = 0.5*i.normal + float3(0.5, 0.5, 0.5);
 
