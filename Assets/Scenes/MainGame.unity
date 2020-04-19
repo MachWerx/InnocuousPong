@@ -1461,7 +1461,7 @@ GameObject:
   - component: {fileID: 1225799898}
   - component: {fileID: 1225799901}
   - component: {fileID: 1225799900}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: PuckFragment
   m_TagString: Untagged
   m_Icon: {fileID: 0}

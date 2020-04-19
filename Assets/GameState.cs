@@ -179,10 +179,10 @@ public class GameState : MonoBehaviour {
       }
     }
 
-    //foreach (var paddle in GetPaddles()) {
-    //  paddle.Horizontal = horizontalValue;
-    //  paddle.Vertical = verticalValue;
-    //}
+    foreach (var paddle in GetPaddles()) {
+      paddle.Horizontal = horizontalValue;
+      paddle.Vertical = verticalValue;
+    }
   }
 
   private void AdjustCamera() {
