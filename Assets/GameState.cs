@@ -6,6 +6,8 @@ public class GameState : MonoBehaviour {
   [SerializeField] private Paddle m_PaddleRight = null;
   [SerializeField] private Paddle m_PaddleDown = null;
   [SerializeField] private Paddle m_PaddleUp = null;
+  [SerializeField] private Paddle m_PaddleBack = null;
+  [SerializeField] private Paddle m_PaddleFront = null;
   [SerializeField] private TMPro.TextMeshPro m_ScoreText = null;
   [SerializeField] private TMPro.TextMeshPro m_LevelText = null;
 
@@ -16,7 +18,7 @@ public class GameState : MonoBehaviour {
     Down,
     Up,
     Back,
-    Fore
+    Front
   }
 
   // Each enty specifies whether the given paddle (Left, Right, Down, Up, Back, Fore) is static for
@@ -27,6 +29,7 @@ public class GameState : MonoBehaviour {
     new bool[] {false, false, true , true , true , true },  // level 3, left and right, opposite
     new bool[] {false, false, false, false, true , true },  // level 4, left/right and down/up, linked to y and x
     new bool[] {false, false, false, false, true , true },  // level 5, left/right and down/up, just y
+    new bool[] {false, false, false, false, false, false},  // level 6, THREE DIMENSIONS!
   };
 
   // Each enty specifies the horizontal axis for the given paddle (Left, Right, Down, Up, Back,
@@ -34,9 +37,10 @@ public class GameState : MonoBehaviour {
   private Direction[][] kHorizontalAxisMap = new Direction[][] {
     new Direction[] {Direction.None, Direction.None, Direction.None, Direction.None, Direction.None, Direction.None},  // level 1
     new Direction[] {Direction.None, Direction.None, Direction.None, Direction.None, Direction.None, Direction.None},  // level 2
-    new Direction[] {Direction.None, Direction.None, Direction.None, Direction.None, Direction.None, Direction.None},  // level 2
-    new Direction[] {Direction.None, Direction.None, Direction.Right, Direction.Right, Direction.None, Direction.None},  // level 2
-    new Direction[] {Direction.None, Direction.None, Direction.None, Direction.None, Direction.None, Direction.None},  // level 2
+    new Direction[] {Direction.None, Direction.None, Direction.None, Direction.None, Direction.None, Direction.None},  // level 3
+    new Direction[] {Direction.None, Direction.None, Direction.Right, Direction.Right, Direction.None, Direction.None},  // level 4
+    new Direction[] {Direction.None, Direction.None, Direction.None, Direction.None, Direction.None, Direction.None},  // level 5
+    new Direction[] {Direction.Back, Direction.Front, Direction.Left, Direction.Right, Direction.Down, Direction.Up},  // level 6
   };
 
   // Each enty specifies the vertical axis for the given paddle (Left, Right, Down, Up, Back,
@@ -44,9 +48,10 @@ public class GameState : MonoBehaviour {
   private Direction[][] kVerticalAxisMap = new Direction[][] {
     new Direction[] {Direction.Up, Direction.None, Direction.None, Direction.None, Direction.None, Direction.None},  // level 1
     new Direction[] {Direction.Up, Direction.Up, Direction.None, Direction.None, Direction.None, Direction.None},  // level 2
-    new Direction[] {Direction.Up, Direction.Down, Direction.None, Direction.None, Direction.None, Direction.None},  // level 2
-    new Direction[] {Direction.Up, Direction.Up, Direction.None, Direction.None, Direction.None, Direction.None},  // level 2
-    new Direction[] {Direction.Up, Direction.Down, Direction.Left, Direction.Right, Direction.None, Direction.None},  // level 2
+    new Direction[] {Direction.Up, Direction.Down, Direction.None, Direction.None, Direction.None, Direction.None},  // level 3
+    new Direction[] {Direction.Up, Direction.Up, Direction.None, Direction.None, Direction.None, Direction.None},  // level 4
+    new Direction[] {Direction.Up, Direction.Down, Direction.Left, Direction.Right, Direction.None, Direction.None},  // level 5
+    new Direction[] {Direction.Up, Direction.Down, Direction.Back, Direction.Front, Direction.Left, Direction.Right},  // level 6
   };
 
   public int Score {
@@ -84,6 +89,8 @@ public class GameState : MonoBehaviour {
       m_PaddleRight,
       m_PaddleDown,
       m_PaddleUp,
+      m_PaddleBack,
+      m_PaddleFront
     };
   }
 
@@ -131,12 +138,12 @@ public class GameState : MonoBehaviour {
   }
 
   public float GetPuckTargetSpeed() {
-    return 2 + Level / 4.0f;
+    return 0.2f * (2 + Level / 4.0f);
   }
 
   private void ResetGame() {
     Level = 0;
-    Score = 8;
+    Score = 9;
     m_LevelText.alpha = 1;
     m_Difficulty = 0.0f;
 
@@ -155,11 +162,13 @@ public class GameState : MonoBehaviour {
       m_PaddleRight.SetStatic(staticMap[1]);
       m_PaddleDown.SetStatic(staticMap[2]);
       m_PaddleUp.SetStatic(staticMap[3]);
+      m_PaddleBack.SetStatic(staticMap[4]);
+      m_PaddleFront.SetStatic(staticMap[5]);
     }
 
-    foreach (var paddle in GetPaddles()) {
-      paddle.Horizontal = horizontalValue;
-      paddle.Vertical = verticalValue;
-    }
+    //foreach (var paddle in GetPaddles()) {
+    //  paddle.Horizontal = horizontalValue;
+    //  paddle.Vertical = verticalValue;
+    //}
   }
 }

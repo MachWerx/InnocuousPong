@@ -2,6 +2,9 @@
 
 public class Puck : MonoBehaviour {
   [SerializeField] GameState m_GameState = null;
+  [SerializeField] Transform m_GuideX = null;
+  [SerializeField] Transform m_GuideY = null;
+  [SerializeField] Transform m_GuideZ = null;
 
   public bool OutOfBounds {
     get {
@@ -31,6 +34,9 @@ public class Puck : MonoBehaviour {
     }
 
     transform.localPosition = pos;
+    m_GuideX.localPosition = new Vector3(0, pos.y, pos.z);
+    m_GuideY.localPosition = new Vector3(pos.x, 0, pos.z);
+    m_GuideZ.localPosition = new Vector3(pos.x, pos.y, 0);
   }
 
   public void Reset() {

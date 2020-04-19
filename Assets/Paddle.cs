@@ -11,7 +11,7 @@ public class Paddle : MonoBehaviour {
     Down,
     Up,
     Back,
-    Fore
+    Front
   }
 
   public float Horizontal {
@@ -27,7 +27,7 @@ public class Paddle : MonoBehaviour {
           return transform.localPosition.y;
         case GameState.Direction.Back:
           return -transform.localPosition.z;
-        case GameState.Direction.Fore:
+        case GameState.Direction.Front:
           return transform.localPosition.z;
       }
       return 0;
@@ -51,7 +51,7 @@ public class Paddle : MonoBehaviour {
         case GameState.Direction.Back:
           pos.z = -value;
           break;
-        case GameState.Direction.Fore:
+        case GameState.Direction.Front:
           pos.z = value;
           break;
       }
@@ -72,7 +72,7 @@ public class Paddle : MonoBehaviour {
           return transform.localPosition.y;
         case GameState.Direction.Back:
           return -transform.localPosition.z;
-        case GameState.Direction.Fore:
+        case GameState.Direction.Front:
           return transform.localPosition.z;
       }
       return 0;
@@ -96,7 +96,7 @@ public class Paddle : MonoBehaviour {
         case GameState.Direction.Back:
           pos.z = -value;
           break;
-        case GameState.Direction.Fore:
+        case GameState.Direction.Front:
           pos.z = value;
           break;
       }
@@ -183,11 +183,15 @@ public class Paddle : MonoBehaviour {
     switch (m_Type) {
       case Type.Left:
       case Type.Right:
-        size.y = m_IsStatic ? 10.5f : 2.0f;
+        size.y = size.z = m_IsStatic ? 10.5f : 2.0f;
         break;
       case Type.Down:
       case Type.Up:
-        size.x = m_IsStatic ? 10.5f : 2.0f;
+        size.x = size.z = m_IsStatic ? 10.5f : 2.0f;
+        break;
+      case Type.Back:
+      case Type.Front:
+        size.x = size.y = m_IsStatic ? 10.5f : 2.0f;
         break;
     }
     transform.localScale = size;
