@@ -2622,6 +2622,7 @@ MonoBehaviour:
   m_PaddleBack: {fileID: 189557929}
   m_PaddleFront: {fileID: 1707657932}
   m_GridGuide: {fileID: 1713043748}
+  m_Light: {fileID: 1579324281}
   m_ScoreText: {fileID: 1208363381}
   m_LevelText: {fileID: 1962031059}
 --- !u!4 &1815406511

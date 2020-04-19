@@ -10,6 +10,7 @@ public class GameState : MonoBehaviour {
   [SerializeField] private Paddle m_PaddleBack = null;
   [SerializeField] private Paddle m_PaddleFront = null;
   [SerializeField] private GridGuide m_GridGuide = null;
+  [SerializeField] private Light m_Light = null;
 
   [SerializeField] private TMPro.TextMeshPro m_ScoreText = null;
   [SerializeField] private TMPro.TextMeshPro m_LevelText = null;
@@ -33,7 +34,7 @@ public class GameState : MonoBehaviour {
     4.0f,  // level 2, left and right, opposite
     4.0f,  // level 3, left/right and down/up, linked to y and x
     3.0f,  // level 4, left/right and down/up, just y
-    2.0f,  // level 5, THREE DIMENSIONS!
+    1.0f,  // level 5, THREE DIMENSIONS!
   };
 
   // Each enty specifies whether the given paddle (Left, Right, Down, Up, Back, Fore) is static for
@@ -78,28 +79,21 @@ public class GameState : MonoBehaviour {
       m_ScoreText.text = m_Score.ToString();
 
       Level = (m_Score / kPointsBetweenLevels);
-      if (Level >= kMaxLevel) {
-        Level = kMaxLevel - 1;
-      }
     }
   }
 
   public int Level {
     get { return m_Level; }
     set {
+      if (value >= kMaxLevel) {
+        value = kMaxLevel - 1;
+      }
       if (m_Level != value) {
         m_Level = value;
         //m_LevelText.text = $"Level {m_Level}!";
         //m_LevelText.alpha = 1;
 
-        AdjustPaddles();
-        AdjustCamera();
-
-        // show guides after level 4
-        if (m_Level > 4) {
-          m_GridGuide.gameObject.SetActive(true);
-          m_Puck.SetGuides(true);
-        }
+        AdjustForNewLevel();
       }
     }
   }
@@ -155,6 +149,22 @@ public class GameState : MonoBehaviour {
     return kPuckBaseSpeed[Level] * (1 + .5f * adjustFactor);
   }
 
+  private void AdjustForNewLevel() {
+    AdjustPaddles();
+    AdjustCamera();
+    float lightFactor = (float)Level / (kMaxLevel - 1);
+    m_Light.intensity = Mathf.Lerp(1.0f, 0.02f, lightFactor);
+
+    // show guides after level 4
+    if (Level > 4) {
+      m_Puck.SetGuides(true);
+      m_GridGuide.gameObject.SetActive(true);
+    } else {
+      m_Puck.SetGuides(false);
+      m_GridGuide.gameObject.SetActive(false);
+    }
+  }
+
   private void AdjustPaddles() {
     float horizontalValue = m_PaddleLeft.transform.localPosition.y;
     float verticalValue = m_PaddleLeft.transform.localPosition.y;
@@ -185,16 +195,13 @@ public class GameState : MonoBehaviour {
     }
   }
   private void ResetGame() {
-    Score = 0;
+    Score = 14;
     m_Difficulty = 0.0f;
 
     m_Puck.Reset();
-    m_Puck.SetGuides(false);
     foreach (var paddle in GetPaddles()) {
       paddle.ResetPosition();
     }
-    AdjustPaddles();
-    AdjustCamera();
-    m_GridGuide.gameObject.SetActive(false);
+    AdjustForNewLevel();
   }
 }
