@@ -174,10 +174,14 @@ public class Paddle : MonoBehaviour {
     }
   }
 
+  public void ResetPosition() {
+    transform.localPosition = m_InitialPosition;
+  }
+
   public void SetStatic(bool value) {
     m_IsStatic = value;
     if (m_IsStatic) {
-      transform.localPosition = m_InitialPosition;
+      ResetPosition();
     }
     Vector3 size = 0.5f * Vector3.one;
     switch (m_Type) {

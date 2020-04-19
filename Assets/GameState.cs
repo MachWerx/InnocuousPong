@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
 public class GameState : MonoBehaviour {
+  [SerializeField] private CameraControl m_CameraControl = null;
   [SerializeField] private Puck m_Puck = null;
   [SerializeField] private Paddle m_PaddleLeft = null;
   [SerializeField] private Paddle m_PaddleRight = null;
@@ -75,6 +76,7 @@ public class GameState : MonoBehaviour {
         m_LevelText.alpha = 1;
 
         AdjustPaddles();
+        AdjustCamera();
       }
     }
   }
@@ -145,10 +147,13 @@ public class GameState : MonoBehaviour {
 
   private void ResetGame() {
     Level = 0;
-    Score = 10;
+    Score = 9;
     m_LevelText.alpha = 1;
     m_Difficulty = 0.0f;
 
+    foreach (var paddle in GetPaddles()) {
+      paddle.ResetPosition();
+    }
     m_Puck.Reset();
   }
 
@@ -166,11 +171,24 @@ public class GameState : MonoBehaviour {
       m_PaddleUp.SetStatic(staticMap[3]);
       m_PaddleBack.SetStatic(staticMap[4]);
       m_PaddleFront.SetStatic(staticMap[5]);
+
+      if (Level < 6) {
+        m_PaddleBack.transform.localScale = Vector3.zero;
+        m_PaddleFront.transform.localScale = Vector3.zero;
+      }
     }
 
     //foreach (var paddle in GetPaddles()) {
     //  paddle.Horizontal = horizontalValue;
     //  paddle.Vertical = verticalValue;
     //}
+  }
+
+  private void AdjustCamera() {
+    if (Level < 6) {
+      m_CameraControl.TransitionTo(Quaternion.Euler(0, 0, 0));
+    } else {
+      m_CameraControl.TransitionTo(Quaternion.Euler(30, 30, 0));
+    }
   }
 }

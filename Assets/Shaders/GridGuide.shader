@@ -112,16 +112,11 @@
                 gridPow = gridPow * gridPow;
                 gridPow = gridPow * gridPow;
                 gridPow = gridPow * gridPow;
-                col = float4(.2 * gridPow * gridPow, .6 * gridPow, gridPow, 0);
+                col = float4(.1 * gridPow * gridPow, .6 * gridPow, gridPow, 0);
                 col = (.9 * highlight)* col;
 
-                //col.rgb = max(col.rgb, float3(.2 * puckTargetPow * puckTargetPow, .5 * puckTargetPow, puckTargetPow));
-                col.rgb = max(col.rgb, float3(puckTargetPow, .5 * puckTargetPow, .2 * puckTargetPow * puckTargetPow));
-                //col *= 20*grid;
+                col.rgb = max(col.rgb, float3(puckTargetPow, puckTargetPow, .2 * puckTargetPow * puckTargetPow));
 
-                //col.rgb = 0.5*i.normal + float3(0.5, 0.5, 0.5);
-
-                // apply fog
                 //UNITY_APPLY_FOG(i.fogCoord, col);
                 return col;
             }
