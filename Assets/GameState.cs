@@ -135,10 +135,7 @@ public class GameState : MonoBehaviour {
 
   public Direction GetHorizontalAxis(Paddle.Type type) {
     if (Level > 0) {
-      int mapLevel = Level <= kPaddleStaticMap.Length
-          ? Level - 1
-          : kPaddleStaticMap.Length - 1;
-      return kHorizontalAxisMap[mapLevel][(int)type];
+      return kHorizontalAxisMap[Level - 1][(int)type];
     }
 
     return Direction.None;
@@ -146,10 +143,7 @@ public class GameState : MonoBehaviour {
 
   public Direction GetVerticalAxis(Paddle.Type type) {
     if (Level > 0) {
-      int mapLevel = Level <= kPaddleStaticMap.Length
-          ? Level - 1
-          : kPaddleStaticMap.Length - 1;
-      return kVerticalAxisMap[mapLevel][(int)type];
+      return kVerticalAxisMap[Level - 1][(int)type];
     }
 
     return Direction.None;
@@ -173,10 +167,7 @@ public class GameState : MonoBehaviour {
     float horizontalValue = m_PaddleLeft.transform.localPosition.y;
     float verticalValue = m_PaddleLeft.transform.localPosition.y;
     if (Level > 0) {
-      int mapLevel = Level <= kPaddleStaticMap.Length
-          ? Level - 1
-          : kPaddleStaticMap.Length - 1;
-      bool[] staticMap = kPaddleStaticMap[mapLevel];
+      bool[] staticMap = kPaddleStaticMap[Level - 1];
       m_PaddleLeft.SetStatic(staticMap[0]);
       m_PaddleRight.SetStatic(staticMap[1]);
       m_PaddleDown.SetStatic(staticMap[2]);
