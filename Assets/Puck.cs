@@ -114,6 +114,19 @@ public class Puck : MonoBehaviour {
     m_GuideZ.gameObject.SetActive(active);
   }
 
+  public Vector3 GetTargetPosition() {
+    Ray ray = new Ray(transform.position, m_Velocity.normalized);
+    RaycastHit hitInfo;
+    int layerMask = 1 << 9;
+    if (Physics.Raycast(ray, out hitInfo, 10.0f, layerMask)) {
+      Debug.Log($"hit");
+      return hitInfo.point;
+    } else {
+      Debug.Log($"no hit");
+      return transform.localPosition;
+    }
+  }
+
   public void Reset() {
     transform.localPosition = Vector3.zero;
     float angle = (Random.value - 0.5f) * 0.5f * Mathf.PI + Mathf.PI;

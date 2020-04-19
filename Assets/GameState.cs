@@ -34,7 +34,7 @@ public class GameState : MonoBehaviour {
     4.0f,  // level 2, left and right, opposite
     4.0f,  // level 3, left/right and down/up, linked to y and x
     3.0f,  // level 4, left/right and down/up, just y
-    1.0f,  // level 5, THREE DIMENSIONS!
+    2.0f,  // level 5, THREE DIMENSIONS!
   };
 
   // Each enty specifies whether the given paddle (Left, Right, Down, Up, Back, Fore) is static for
@@ -146,7 +146,7 @@ public class GameState : MonoBehaviour {
 
   public float GetPuckTargetSpeed() {
     float adjustFactor = ((float)Score - Level * kPointsBetweenLevels) / kPointsBetweenLevels;
-    return kPuckBaseSpeed[Level] * (1 + .5f * adjustFactor);
+    return kPuckBaseSpeed[Level] * (1 + .8f * adjustFactor);
   }
 
   private void AdjustForNewLevel() {
@@ -195,7 +195,8 @@ public class GameState : MonoBehaviour {
     }
   }
   private void ResetGame() {
-    Score = 14;
+    Score = 0;
+    m_LevelText.alpha = 0;
     m_Difficulty = 0.0f;
 
     m_Puck.Reset();

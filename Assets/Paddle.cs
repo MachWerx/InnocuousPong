@@ -170,9 +170,7 @@ public class Paddle : MonoBehaviour {
         puckVel -= 2 * Vector3.Dot(puckVel, normal) * normal;
         puckPos += puckVel * t;
       }
-      if (!m_IsStatic) {
-        m_GameState.Score++;
-      }
+      m_GameState.Score++;
     }
   }
 

@@ -41,6 +41,7 @@
             sampler2D _MainTex;
             float4 _MainTex_ST;
             fixed4 _PuckPosition;
+            fixed _PuckTargetOpacity;
             fixed4 _PaddlePosition;
             matrix _QuadAdjust;
 
@@ -99,6 +100,7 @@
                     = abs(i.normal.x) * puckTargetX
                     + abs(i.normal.y) * puckTargetY
                     + abs(i.normal.z) * puckTargetZ;
+                puckTarget *= _PuckTargetOpacity;
                 float puckTargetPow = puckTarget * puckTarget;
                 puckTargetPow = puckTargetPow * puckTargetPow;
                 puckTargetPow = puckTargetPow * puckTargetPow;

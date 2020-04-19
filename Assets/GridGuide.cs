@@ -47,10 +47,33 @@ public class GridGuide : MonoBehaviour {
   }
 
   void Update() {
+    Vector3 puckTarget = m_Puck.GetTargetPosition();
+    //Vector4 posPuck = new Vector4(
+    //    m_Puck.transform.localPosition.x / transform.localScale.x,
+    //    m_Puck.transform.localPosition.y / transform.localScale.y,
+    //    m_Puck.transform.localPosition.z / transform.localScale.z,
+    //    1);
+    Vector3[] directions = new Vector3[] {
+      Vector3.left,
+      Vector3.right,
+      Vector3.down,
+      Vector3.up,
+      Vector3.back,
+      Vector3.forward,
+    };
+    int maxDirIndex = 0;
+    float maxDir = Vector3.Dot(directions[0], puckTarget);
+    for (int i = 0; i < 6; i++) {
+      float dir = Vector3.Dot(directions[i], puckTarget);
+      if (dir > maxDir) {
+        maxDir = dir;
+        maxDirIndex = i;
+      }
+    }
     Vector4 posPuck = new Vector4(
-        m_Puck.transform.localPosition.x / transform.localScale.x,
-        m_Puck.transform.localPosition.y / transform.localScale.y,
-        m_Puck.transform.localPosition.z / transform.localScale.z,
+        puckTarget.x / transform.localScale.x,
+        puckTarget.y / transform.localScale.y,
+        puckTarget.z / transform.localScale.z,
         1);
     for (int i = 0; i < m_Paddles.Length; i++) {
       m_Materials[i].SetVector("_PuckPosition", posPuck);
@@ -59,6 +82,7 @@ public class GridGuide : MonoBehaviour {
           m_Paddles[i].transform.localPosition.y / transform.localScale.y,
           m_Paddles[i].transform.localPosition.z / transform.localScale.z,
           1);
+      m_Materials[i].SetFloat("_PuckTargetOpacity", i == maxDirIndex ? 1.0f : 0.0f);
       m_Materials[i].SetVector("_PaddlePosition", posPaddle);
       m_Materials[i].SetMatrix("_QuadAdjust", m_Matrices[i]);
     }
