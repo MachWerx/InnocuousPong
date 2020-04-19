@@ -164,7 +164,7 @@ public class Paddle : MonoBehaviour {
         pos -= m_Velocity * t;
         if (!m_IsStatic) {
           // tweak normals for paddles
-          const float kFudgeRadius = 5.0f;  // the radius of a sphere to fudge the normal with
+          const float kFudgeRadius = 1.0f;  // the radius of a sphere to fudge the normal with
           normal = (puckPos - (pos - kFudgeRadius * normal)).normalized;
         }
         puckVel -= 2 * Vector3.Dot(puckVel, normal) * normal;
