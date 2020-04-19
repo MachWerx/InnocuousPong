@@ -47,13 +47,19 @@ public class GridGuide : MonoBehaviour {
   }
 
   void Update() {
+    Vector4 posPuck = new Vector4(
+        m_Puck.transform.localPosition.x / transform.localScale.x,
+        m_Puck.transform.localPosition.y / transform.localScale.y,
+        m_Puck.transform.localPosition.z / transform.localScale.z,
+        1);
     for (int i = 0; i < m_Paddles.Length; i++) {
-      Vector4 pos = new Vector4(
+      m_Materials[i].SetVector("_PuckPosition", posPuck);
+      Vector4 posPaddle = new Vector4(
           m_Paddles[i].transform.localPosition.x / transform.localScale.x,
           m_Paddles[i].transform.localPosition.y / transform.localScale.y,
           m_Paddles[i].transform.localPosition.z / transform.localScale.z,
           1);
-      m_Materials[i].SetVector("_PaddlePosition", pos);
+      m_Materials[i].SetVector("_PaddlePosition", posPaddle);
       m_Materials[i].SetMatrix("_QuadAdjust", m_Matrices[i]);
     }
   }

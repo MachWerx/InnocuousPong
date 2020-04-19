@@ -15,8 +15,6 @@
         {
             CGPROGRAM
 
-            fixed4 _PaddlePosition;
-
             #pragma vertex vert
             #pragma fragment frag
             // make fog work
@@ -42,6 +40,8 @@
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
+            fixed4 _PuckPosition;
+            fixed4 _PaddlePosition;
             matrix _QuadAdjust;
 
             v2f vert (appdata v)
@@ -61,31 +61,62 @@
                 // sample the texture
                 fixed4 col = tex2D(_MainTex, i.uv);
 
-                float gridX = smoothstep(0.7, 1.0, 2 * abs(abs((10 * i.posObj.x) % 1) - 0.5));
-                float gridY = smoothstep(0.7, 1.0, 2 * abs(abs((10 * i.posObj.y) % 1) - 0.5));
-                float gridZ = smoothstep(0.7, 1.0, 2 * abs(abs((10 * i.posObj.z) % 1) - 0.5));
+                float gridX = sin(60 * i.posObj.x);
+                float gridY = sin(60 * i.posObj.y);
+                float gridZ = sin(60 * i.posObj.z);
 
                 float grid
                     = max(max(gridX * (1 - abs(i.normal.x)), 
                     gridY * (1 - abs(i.normal.y))),
                     gridZ * (1 - abs(i.normal.z)));
 
-                float hightlightX = smoothstep(0, 0.9, 1 - 5 * max(abs(i.posObj.y - _PaddlePosition.y), abs(i.posObj.z - _PaddlePosition.z)));
-                float hightlightY = smoothstep(0, 0.9, 1 - 5 * max(abs(i.posObj.x - _PaddlePosition.x), abs(i.posObj.z - _PaddlePosition.z)));
-                float hightlightZ = smoothstep(0, 0.9, 1 - 5 * max(abs(i.posObj.x - _PaddlePosition.x), abs(i.posObj.y - _PaddlePosition.y)));
+                float hightlightX = max(abs(i.posObj.y - _PaddlePosition.y), abs(i.posObj.z - _PaddlePosition.z));
+                float hightlightY = max(abs(i.posObj.x - _PaddlePosition.x), abs(i.posObj.z - _PaddlePosition.z));
+                float hightlightZ = max(abs(i.posObj.x - _PaddlePosition.x), abs(i.posObj.y - _PaddlePosition.y));
+                float backFade;
+                backFade = 3 + .5*sin(2 * 3.1415926 * (.25*_Time.y + 0));
+                hightlightX = max(smoothstep(0, 0.9, 1 - 6 * hightlightX), .05 * (1 - backFade * hightlightX));
+                hightlightY = max(smoothstep(0, 0.9, 1 - 6 * hightlightY), .05 * (1 - backFade * hightlightY));
+                hightlightZ = max(smoothstep(0, 0.9, 1 - 6 * hightlightZ), .05 * (1 - backFade * hightlightZ));
                 float highlight
                     = abs(i.normal.x) * hightlightX
                     + abs(i.normal.y) * hightlightY
                     + abs(i.normal.z) * hightlightZ;
 
-                float grid8 = grid * grid;
-                grid8 = grid8 * grid8;
-                grid8 = grid8 * grid8;
-                grid8 = grid8 * grid8;
-                grid8 = grid8 * grid8;
-                col = float4(.2 * grid8 * grid8, .5 * grid8, grid, 0);
+                float puckDeltaX = _PuckPosition.x - i.posObj.x;
+                float puckDeltaY = _PuckPosition.y - i.posObj.y;
+                float puckDeltaZ = _PuckPosition.z - i.posObj.z;
+                puckDeltaX *= puckDeltaX;
+                puckDeltaY *= puckDeltaY;
+                puckDeltaZ *= puckDeltaZ;
+                float puckDistX = sqrt(puckDeltaY + puckDeltaZ);
+                float puckDistY = sqrt(puckDeltaX + puckDeltaZ);
+                float puckDistZ = sqrt(puckDeltaX + puckDeltaY);
+                float puckTargetX = (1 - .9 * puckDistX) * sin(30 * puckDistX - 3 * _Time.y);
+                float puckTargetY = (1 - .9 * puckDistY) * sin(30 * puckDistY - 3 * _Time.y);
+                float puckTargetZ = (1 - .9 * puckDistZ) * sin(30 * puckDistZ - 3 * _Time.y);
+                float puckTarget
+                    = abs(i.normal.x) * puckTargetX
+                    + abs(i.normal.y) * puckTargetY
+                    + abs(i.normal.z) * puckTargetZ;
+                float puckTargetPow = puckTarget * puckTarget;
+                puckTargetPow = puckTargetPow * puckTargetPow;
+                puckTargetPow = puckTargetPow * puckTargetPow;
+                puckTargetPow = puckTargetPow * puckTargetPow;
+                puckTargetPow = puckTargetPow * puckTargetPow;
 
-                col = (.9 * highlight + .01)* col;
+                //grid = max(grid, puckTarget);
+
+                float gridPow = grid * grid;
+                gridPow = gridPow * gridPow;
+                gridPow = gridPow * gridPow;
+                gridPow = gridPow * gridPow;
+                gridPow = gridPow * gridPow;
+                col = float4(.2 * gridPow * gridPow, .6 * gridPow, gridPow, 0);
+                col = (.9 * highlight)* col;
+
+                //col.rgb = max(col.rgb, float3(.2 * puckTargetPow * puckTargetPow, .5 * puckTargetPow, puckTargetPow));
+                col.rgb = max(col.rgb, float3(puckTargetPow, .5 * puckTargetPow, .2 * puckTargetPow * puckTargetPow));
                 //col *= 20*grid;
 
                 //col.rgb = 0.5*i.normal + float3(0.5, 0.5, 0.5);
