@@ -108,6 +108,12 @@ public class Puck : MonoBehaviour {
     }
   }
 
+  public void SetGuides(bool active) {
+    m_GuideX.gameObject.SetActive(active);
+    m_GuideY.gameObject.SetActive(active);
+    m_GuideZ.gameObject.SetActive(active);
+  }
+
   public void Reset() {
     transform.localPosition = Vector3.zero;
     float angle = (Random.value - 0.5f) * 0.5f * Mathf.PI + Mathf.PI;
@@ -116,9 +122,6 @@ public class Puck : MonoBehaviour {
     for (int i = 0; i < m_Fragments.Length; i++) {
       m_Fragments[i].SetActive(false);
     }
-    m_GuideX.gameObject.SetActive(true);
-    m_GuideY.gameObject.SetActive(true);
-    m_GuideZ.gameObject.SetActive(true);
     m_IsOut = false;
     m_IsExploding = false;
     IsDead = false;

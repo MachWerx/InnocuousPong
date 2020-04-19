@@ -9,6 +9,8 @@ public class GameState : MonoBehaviour {
   [SerializeField] private Paddle m_PaddleUp = null;
   [SerializeField] private Paddle m_PaddleBack = null;
   [SerializeField] private Paddle m_PaddleFront = null;
+  [SerializeField] private GridGuide m_GridGuide = null;
+
   [SerializeField] private TMPro.TextMeshPro m_ScoreText = null;
   [SerializeField] private TMPro.TextMeshPro m_LevelText = null;
 
@@ -21,6 +23,9 @@ public class GameState : MonoBehaviour {
     Back,
     Front
   }
+
+  private const int kPointsBetweenLevels = 3;
+  private const int kMaxLevel = 6;
 
   // Each enty specifies whether the given paddle (Left, Right, Down, Up, Back, Fore) is static for
   // that level.
@@ -63,7 +68,10 @@ public class GameState : MonoBehaviour {
       m_Score = value;
       m_ScoreText.text = m_Score.ToString();
 
-      Level = (m_Score / 2) + 1;
+      Level = (m_Score / kPointsBetweenLevels) + 1;
+      if (Level > kMaxLevel) {
+        Level = kMaxLevel;
+      }
     }
   }
 
@@ -77,6 +85,12 @@ public class GameState : MonoBehaviour {
 
         AdjustPaddles();
         AdjustCamera();
+
+        // show guides after level 5
+        if (m_Level > 5) {
+          m_GridGuide.gameObject.SetActive(true);
+          m_Puck.SetGuides(true);
+        }
       }
     }
   }
@@ -142,20 +156,17 @@ public class GameState : MonoBehaviour {
   }
 
   public float GetPuckTargetSpeed() {
-    return 1f * (2 + Level / 4.0f);
-  }
+    //float[] kBaseSpeed = new float{
+    //  8,  // level 1: 
+    //  6,
+    //  4,
+    //  4,
+    //  4,
+    //  4;
+    //switch (Level) {
 
-  private void ResetGame() {
-    Level = 0;
-    //Score = 9;
-    Score = 0;
-    m_LevelText.alpha = 1;
-    m_Difficulty = 0.0f;
-
-    foreach (var paddle in GetPaddles()) {
-      paddle.ResetPosition();
-    }
-    m_Puck.Reset();
+    //}
+    return 4 + Score - ((Level - 1) * kPointsBetweenLevels);
   }
 
   private void AdjustPaddles() {
@@ -191,5 +202,19 @@ public class GameState : MonoBehaviour {
     } else {
       m_CameraControl.TransitionTo(Quaternion.Euler(30, 30, 0));
     }
+  }
+  private void ResetGame() {
+    Level = 0;
+    //Score = 9;
+    Score = 0;
+    m_LevelText.alpha = 1;
+    m_Difficulty = 0.0f;
+
+    m_Puck.Reset();
+    m_Puck.SetGuides(false);
+    foreach (var paddle in GetPaddles()) {
+      paddle.ResetPosition();
+    }
+    m_GridGuide.gameObject.SetActive(false);
   }
 }
