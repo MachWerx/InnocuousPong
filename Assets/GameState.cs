@@ -27,6 +27,15 @@ public class GameState : MonoBehaviour {
   private const int kPointsBetweenLevels = 3;
   private const int kMaxLevel = 6;
 
+  private float[] kPuckBaseSpeed = new float[] {
+    5.0f,  // level 0, just left
+    5.0f,  // level 1, left and right, linked
+    4.0f,  // level 2, left and right, opposite
+    4.0f,  // level 3, left/right and down/up, linked to y and x
+    3.0f,  // level 4, left/right and down/up, just y
+    2.0f,  // level 5, THREE DIMENSIONS!
+  };
+
   // Each enty specifies whether the given paddle (Left, Right, Down, Up, Back, Fore) is static for
   // that level.
   private bool[][] kPaddleStaticMap = new bool[][] {
@@ -80,8 +89,8 @@ public class GameState : MonoBehaviour {
     set {
       if (m_Level != value) {
         m_Level = value;
-        m_LevelText.text = $"Level {m_Level}!";
-        m_LevelText.alpha = 1;
+        //m_LevelText.text = $"Level {m_Level}!";
+        //m_LevelText.alpha = 1;
 
         AdjustPaddles();
         AdjustCamera();
@@ -142,17 +151,8 @@ public class GameState : MonoBehaviour {
   }
 
   public float GetPuckTargetSpeed() {
-    //float[] kBaseSpeed = new float{
-    //  8,  // level 1: 
-    //  6,
-    //  4,
-    //  4,
-    //  4,
-    //  4;
-    //switch (Level) {
-
-    //}
-    return 4 + Score - (Level * kPointsBetweenLevels);
+    float adjustFactor = ((float)Score - Level * kPointsBetweenLevels) / kPointsBetweenLevels;
+    return kPuckBaseSpeed[Level] * (1 + .5f * adjustFactor);
   }
 
   private void AdjustPaddles() {
@@ -185,9 +185,7 @@ public class GameState : MonoBehaviour {
     }
   }
   private void ResetGame() {
-    //Score = 9;
     Score = 0;
-    //m_LevelText.alpha = 1;
     m_Difficulty = 0.0f;
 
     m_Puck.Reset();
