@@ -103,7 +103,7 @@ public class GameState : MonoBehaviour {
   }
 
   void Update() {
-    if (m_Puck.OutOfBounds) {
+    if (m_Puck.IsDead) {
       ResetGame();
     }
 
@@ -142,12 +142,13 @@ public class GameState : MonoBehaviour {
   }
 
   public float GetPuckTargetSpeed() {
-    return 0.2f * (2 + Level / 4.0f);
+    return 1f * (2 + Level / 4.0f);
   }
 
   private void ResetGame() {
     Level = 0;
-    Score = 9;
+    //Score = 9;
+    Score = 0;
     m_LevelText.alpha = 1;
     m_Difficulty = 0.0f;
 
