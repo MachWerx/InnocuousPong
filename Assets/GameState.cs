@@ -40,7 +40,8 @@ public class GameState : MonoBehaviour {
     new Direction[] {Direction.None, Direction.None, Direction.None, Direction.None, Direction.None, Direction.None},  // level 3
     new Direction[] {Direction.None, Direction.None, Direction.Right, Direction.Right, Direction.None, Direction.None},  // level 4
     new Direction[] {Direction.None, Direction.None, Direction.None, Direction.None, Direction.None, Direction.None},  // level 5
-    new Direction[] {Direction.Back, Direction.Front, Direction.Left, Direction.Right, Direction.Down, Direction.Up},  // level 6
+    //new Direction[] {Direction.Back, Direction.Front, Direction.Left, Direction.Right, Direction.Down, Direction.Up},  // level 6, too hard?
+    new Direction[] {Direction.Back, Direction.Back, Direction.Right, Direction.Right, Direction.Right, Direction.Right},  // level 6
   };
 
   // Each enty specifies the vertical axis for the given paddle (Left, Right, Down, Up, Back,
@@ -51,7 +52,8 @@ public class GameState : MonoBehaviour {
     new Direction[] {Direction.Up, Direction.Down, Direction.None, Direction.None, Direction.None, Direction.None},  // level 3
     new Direction[] {Direction.Up, Direction.Up, Direction.None, Direction.None, Direction.None, Direction.None},  // level 4
     new Direction[] {Direction.Up, Direction.Down, Direction.Left, Direction.Right, Direction.None, Direction.None},  // level 5
-    new Direction[] {Direction.Up, Direction.Down, Direction.Back, Direction.Front, Direction.Left, Direction.Right},  // level 6
+    //new Direction[] {Direction.Up, Direction.Down, Direction.Back, Direction.Front, Direction.Left, Direction.Right},  // level 6, too hard?
+    new Direction[] {Direction.Up, Direction.Up, Direction.Front, Direction.Front, Direction.Up, Direction.Up},  // level 6, too hard?
   };
 
   public int Score {
