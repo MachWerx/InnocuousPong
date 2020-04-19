@@ -105,7 +105,7 @@ public class Paddle : MonoBehaviour {
   }
 
   private const float kMouseSpeed = 0.5f;
-  private const float kBorder = 4.75f;
+  private const float kBorder = 5f;
   private static readonly Vector3[] kNormals = new Vector3[] {
     Vector3.right,
     Vector3.left,
