@@ -76,12 +76,16 @@ public class GameState : MonoBehaviour {
   public int Score {
     get { return m_Score; }
     set {
-      m_Score = value;
-      m_ScoreText.text = m_Score.ToString();
+      if (m_Score != value) {
+        if (value > m_Score) {
+          m_AudioHit.volume = .2f;
+          m_AudioHit.Play();
+        }
+        m_Score = value;
+        m_ScoreText.text = m_Score.ToString();
 
-      Level = (m_Score / kPointsBetweenLevels);
-
-      m_AudioHit.Play();
+        Level = (m_Score / kPointsBetweenLevels);
+      }
     }
   }
 
