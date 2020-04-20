@@ -13,6 +13,7 @@ public class GameState : MonoBehaviour {
   [SerializeField] private Light m_Light = null;
   [SerializeField] private AudioSource m_AudioHit = null;
   [SerializeField] private AudioSource m_AudioExplosion = null;
+  [SerializeField] private AudioSource m_AudioBackground = null;
 
   [SerializeField] private TMPro.TextMeshPro m_ScoreText = null;
   [SerializeField] private TMPro.TextMeshPro m_LevelText = null;
