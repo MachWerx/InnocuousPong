@@ -12,6 +12,7 @@ public class GameState : MonoBehaviour {
   [SerializeField] private GridGuide m_GridGuide = null;
   [SerializeField] private Light m_Light = null;
   [SerializeField] private AudioSource m_AudioHit = null;
+  [SerializeField] private AudioSource m_AudioExplosion = null;
 
   [SerializeField] private TMPro.TextMeshPro m_ScoreText = null;
   [SerializeField] private TMPro.TextMeshPro m_LevelText = null;
@@ -201,6 +202,11 @@ public class GameState : MonoBehaviour {
       m_CameraControl.TransitionTo(Quaternion.Euler(30, 30, 0));
     }
   }
+
+  public void Explode() {
+    m_AudioExplosion.Play();
+  }
+
   private void ResetGame() {
     Score = 0;
     m_LevelText.alpha = 0;

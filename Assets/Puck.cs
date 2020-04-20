@@ -54,6 +54,7 @@ public class Puck : MonoBehaviour {
           // explode the puck
           m_IsExploding = true;
           m_MainBody.SetActive(false);
+          m_GameState.Explode();
           Vector3 lastVelDir = m_Velocity.normalized;
           for (int i = 0; i < m_Fragments.Length; i++) {
             m_Fragments[i].SetActive(true);
