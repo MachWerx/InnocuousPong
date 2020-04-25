@@ -124,6 +124,7 @@ public class Paddle : MonoBehaviour {
 
   void Update() {
     Vector2 mousePosition = Input.mousePosition;
+    Cursor.lockState = CursorLockMode.Locked;
     Vector3 pos = transform.localPosition;
 
     if (!m_IsStatic) {
