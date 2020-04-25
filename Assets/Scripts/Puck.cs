@@ -84,7 +84,7 @@ public class Puck : MonoBehaviour {
       }
 
       // check for out of bounds
-      const float kBorder = 5.0f;
+      const float kBorder = 5.5f;
       const float puckSize = 0.5f;
       const float kPaddleSize = 0.5f;
       const float bounds = kBorder - 0.5f * puckSize - 0.5f * kPaddleSize;
