@@ -104,7 +104,7 @@ public class Paddle : MonoBehaviour {
     }
   }
 
-  private const float kMouseSpeed = 0.5f;
+  private readonly float kMouseSpeed = Application.platform == RuntimePlatform.WebGLPlayer ? 0.1f : 0.4f;
   private const float kBorder = 5f;
   private static readonly Vector3[] kNormals = new Vector3[] {
     Vector3.right,
