@@ -120,10 +120,8 @@ public class Puck : MonoBehaviour {
     RaycastHit hitInfo;
     int layerMask = 1 << 9;
     if (Physics.Raycast(ray, out hitInfo, 10.0f, layerMask)) {
-      Debug.Log($"hit");
       return hitInfo.point;
     } else {
-      Debug.Log($"no hit");
       return transform.localPosition;
     }
   }
