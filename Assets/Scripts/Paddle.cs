@@ -163,12 +163,14 @@ public class Paddle : MonoBehaviour {
         float t = distance / puckVelNormalComponent;
         puckPos -= puckVel * t;
         pos -= m_Velocity * t;
-        if (!m_IsStatic) {
-          // tweak normals for paddles
-          const float kFudgeRadius = 1.0f;  // the radius of a sphere to fudge the normal with
-          normal = (puckPos - (pos - kFudgeRadius * normal)).normalized;
-        }
         puckVel -= 2 * Vector3.Dot(puckVel, normal) * normal;
+        if (!m_IsStatic) {
+          // add orthogonal velocity
+          Vector3 toPuck = puckPos - pos;
+          Vector3 sideFactor = (toPuck - Vector3.Dot(toPuck, normal) * normal);
+          sideFactor /= Mathf.Abs(Vector3.Dot(sideFactor.normalized, size));
+          puckVel += puckVel.magnitude * sideFactor;
+        }
         puckPos += puckVel * t;
       }
       m_GameState.Score++;
