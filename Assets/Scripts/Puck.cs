@@ -50,7 +50,6 @@ public class Puck : MonoBehaviour {
 
       if (!m_IsExploding) {
         if (m_DeathCountdown < 2.75f) {
-          Debug.Log($"exploding {Time.timeSinceLevelLoad}");
           // explode the puck
           m_IsExploding = true;
           m_MainBody.SetActive(false);

@@ -169,6 +169,7 @@ public class Paddle : MonoBehaviour {
           Vector3 toPuck = puckPos - pos;
           Vector3 sideFactor = (toPuck - Vector3.Dot(toPuck, normal) * normal);
           sideFactor /= Mathf.Abs(Vector3.Dot(sideFactor.normalized, size));
+          if (sideFactor.magnitude > 1) sideFactor.Normalize();
           puckVel += puckVel.magnitude * sideFactor;
         }
         puckPos += puckVel * t;
